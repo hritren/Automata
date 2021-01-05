@@ -31,7 +31,7 @@ class BST {
 
 	void createTreeRec(vector<T> v, int start, int end, Node*& root);
 
-	void toVector_rec(Node* currentNode, vector<T>& v);
+	void toVector_rec(Node* currentNode, vector<T>& v) const;
 
 public:
 	BST() = default;
@@ -44,7 +44,7 @@ public:
 	bool insert(T n);
 	bool contains(T n);
 	bool remove(T n);
-	vector<T> toVector();
+	vector<T> toVector() const;
 };
 
 template<typename T>
@@ -196,14 +196,14 @@ bool BST<T>::insert(T n) {
 }
 
 template<typename T>
-vector<T> BST<T>::toVector() {
+vector<T> BST<T>::toVector() const {
 	vector<T> v;
 	toVector_rec(root, v);
 	return v;
 }
 
 template<typename T>
-void BST<T>::toVector_rec(Node* currentNode, vector<T>& v) {
+void BST<T>::toVector_rec(Node* currentNode, vector<T>& v) const {
 	if (!currentNode) {
 		return;
 	}
