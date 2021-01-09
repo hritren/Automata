@@ -7,7 +7,7 @@ BinaryOperator::BinaryOperator(RegExpr* left, char op, RegExpr* right) {
 	this->op = op;
 	this->left = left;
 	this->right = right;
-	type = 2;
+	type = BINARY_OPERATOR;
 }
 
 BinaryOperator::~BinaryOperator() {
@@ -24,4 +24,20 @@ std::string BinaryOperator::toString() {
 	result += op;
 	result += " " + right->toString() + ")";
 	return result;
+}
+
+Automata BinaryOperator::toAutomata() {
+	if (op == '+') {
+		return Automata::automataUnion(left->toAutomata(), right->toAutomata());
+	}
+
+	if (op == '.') {
+		return Automata::concat(left->toAutomata(), right->toAutomata());
+	}
+
+	if (op == '&') {
+		return Automata::intersection(left->toAutomata(), right->toAutomata());
+	}
+
+	throw "invalid operation";
 }

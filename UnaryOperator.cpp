@@ -9,7 +9,7 @@ UnaryOperator::UnaryOperator(RegExpr* re, char op) {
 		throw "invalid operation";
 	}
 	this->op = op;
-	type = 1;
+	type = UNARY_OPERATOR;
 	this->re = re;
 }
 std::string UnaryOperator::toString() {
@@ -21,4 +21,8 @@ std::string UnaryOperator::toString() {
 
 void UnaryOperator::print() {
 	std::cout << toString();
+}
+
+Automata UnaryOperator::toAutomata() {
+	return Automata::iteration(re->toAutomata());
 }

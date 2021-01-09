@@ -6,6 +6,7 @@ public:
 	~BinaryOperator();
 	void print();
 	std::string toString();
+	Automata toAutomata();
 private:
 	char op;
 	RegExpr* left;

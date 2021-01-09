@@ -5,7 +5,7 @@ Letter::Letter(char letter) {
 		throw "invalid letter";
 	}
 	this->letter = letter;
-	type = 0;
+	type = LETTER;
 }
 std::string Letter::toString() {
 	std::string result;
@@ -17,4 +17,8 @@ std::string Letter::toString() {
 
 void Letter::print() {
 	std::cout << toString();
+}
+
+Automata Letter::toAutomata() {
+	return Automata(letter);
 }

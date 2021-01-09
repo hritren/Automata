@@ -25,14 +25,6 @@ int main() {
 
 	/*RegExpr* re = new BinaryOperator(new UnaryOperator(new Letter('a'), '*'), '+', new BinaryOperator(new Letter('b'), '.', new Letter('a')));
 	re->print();*/
-	Automata a3 = Automata::iteration(a2);
-	cout << a3.acceptsWord("a") << endl;
-	cout << a3.acceptsWord("b") << endl;
-	cout << a3.acceptsWord("ba") << endl;
-	cout << a3.acceptsWord("bb") << endl;
-	cout << a2.acceptsWord("bb") << endl;
-	cout << a2.acceptsWord("") << endl;
-	cout << a3.acceptsWord("") << endl;
 
 	return 0;
 }

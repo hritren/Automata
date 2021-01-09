@@ -14,7 +14,7 @@ bool operator==(const Rule& lhs, const Rule& rhs) {
 	return lhs.init == rhs.init && lhs.letter == rhs.letter && lhs.dest == rhs.dest;
 }
 Automata::Automata() {
-	states = currentState = 0;
+	states = 0;
 	startState = UINT_MAX;
 	acceptsEpsilon = false;
 }
@@ -22,7 +22,7 @@ Automata::Automata() {
 Automata::Automata(vector<char> alphabet, size_t states, size_t startState, vector<Rule> delta, vector<Rule> epsilons, vector<bool> finalStates, bool acceptsEpsilon) {
 	this->alphabet = alphabet;
 	this->states = states;
-	currentState = this->startState = startState;
+	this->startState = startState;
 	this->delta = delta;
 	this->finalStates = finalStates;
 	this->epsilons = epsilons;
@@ -230,4 +230,21 @@ Automata Automata::iteration(const Automata& automata) {
 	}
 
 	return Automata(automata.alphabet, automata.states, automata.startState, automata.delta, epsilons, finalStates, true);
+}
+
+Automata::Automata(char letter) {
+	alphabet.push_back(letter);
+
+	acceptsEpsilon = false;
+
+	states = 3;
+
+	startState = 0;
+
+	finalStates.resize(states);
+	finalStates[1] = true;
+
+	delta.push_back(Rule(0, letter, 1));
+	delta.push_back(Rule(1, letter, 2));
+	delta.push_back(Rule(2, letter, 2));
 }

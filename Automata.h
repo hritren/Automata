@@ -2,9 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Letter.h"
-#include "UnaryOperator.h"
-#include "BinaryOperator.h"
+#include "RegExpr.h"
 
 using namespace std;
 
@@ -38,7 +36,6 @@ public:
 	void print() const;
 
 	size_t startState;
-	size_t currentState;
 	size_t states;
 	string regExpr;
 
@@ -48,6 +45,7 @@ public:
 	vector<Rule> epsilons;
 	Automata(vector<char> alphabet, size_t states, size_t startState, vector<Rule> delta, vector<Rule> epsilons, vector<bool> finalStates, bool acceptsEpsilon);
 	Automata();
+	Automata(char letter);
 
 	//for testing
 	void addRule(size_t init, char letter, size_t dest);
