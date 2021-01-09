@@ -2,39 +2,54 @@
 
 #include <iostream>
 #include <vector>
-#include "BST.hpp"
+#include "Letter.h"
+#include "UnaryOperator.h"
+#include "BinaryOperator.h"
 
 using namespace std;
-bool contains(vector<char> alphabet, char letter);
-	struct Edge {
-		Edge(size_t init, char letter, size_t dest) : init(init), letter(letter), dest(dest) {}
-		size_t init;
-		char letter;
-		size_t dest;
-		void print() {
-			cout << init << " " << letter << " " << dest << endl;
-		}
-	};
+
+template <typename T>
+bool containsElement(const vector<T>& v, T el);
+
+struct Rule {
+	Rule(size_t init, char letter, size_t dest) : init(init), letter(letter), dest(dest) {}
+	size_t init;
+	char letter;
+	size_t dest;
+	void print() {
+		cout << init << " " << letter << " " << dest << endl;
+	}
+};
+bool operator==(const Rule& lhs, const Rule& rhs);
 
 class Automata {
 private:
-	size_t destination(size_t init, char letter) const;
-
+	size_t destinationDelta(size_t init, char letter) const;
+	int existsEpsilonRule(size_t init) const;
+	bool accepts(size_t tmpState, string word) const;
+	bool acceptsEpsilon;
 public:
-	size_t startState;
-	size_t states;
-	vector<char> alphabet;
-	vector<Edge> delta;
-	vector<bool> finalStates;
-	Automata(vector<char> alphabet, size_t states, size_t startState, vector<Edge> delta, vector<bool> finalStates);
-	Automata static complement(const Automata& automata);
-	Automata();
-	/*void addState(size_t state);
-	void addFinalState(size_t finalState);
-	void addLetter(char letter);
-	void setStartState(size_t startState);*/
-	void addEdge(size_t init, char letter, size_t dest);
 	Automata static automataUnion(const Automata& left, const Automata& right);
 	Automata static intersection(const Automata& left, const Automata& right);
-};
+	Automata static concat(const Automata& left, const Automata& right);
+	Automata static complement(const Automata& automata);
+	Automata static iteration(const Automata& automata);
+	bool acceptsWord(string word);
+	void print() const;
 
+	size_t startState;
+	size_t currentState;
+	size_t states;
+	string regExpr;
+
+	vector<char> alphabet;
+	vector<bool> finalStates;
+	vector<Rule> delta;
+	vector<Rule> epsilons;
+	Automata(vector<char> alphabet, size_t states, size_t startState, vector<Rule> delta, vector<Rule> epsilons, vector<bool> finalStates, bool acceptsEpsilon);
+	Automata();
+
+	//for testing
+	void addRule(size_t init, char letter, size_t dest);
+
+};
