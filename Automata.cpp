@@ -13,13 +13,28 @@ bool containsElement(const vector<T>& v, T el) {
 bool operator==(const Rule& lhs, const Rule& rhs) {
 	return lhs.init == rhs.init && lhs.letter == rhs.letter && lhs.dest == rhs.dest;
 }
+
+bool areTheSame(const vector<char>& alphabet1, const vector<char>& alphabet2) {
+	if (alphabet1.size() != alphabet2.size()) {
+		return false;
+	}
+	sort(alphabet1.begin(), alphabet1.end());
+	sort(alphabet2.begin(), alphabet2.end());
+	for (size_t i = 0; i < alphabet1.size(); i++) {
+		if (alphabet1[i] != alphabet2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 Automata::Automata() {
 	states = 0;
 	startState = UINT_MAX;
 	acceptsEpsilon = false;
 }
 
-Automata::Automata(vector<char> alphabet, size_t states, size_t startState, vector<Rule> delta, vector<Rule> epsilons, vector<bool> finalStates, bool acceptsEpsilon) {
+Automata::Automata(const vector<char>& alphabet, size_t states, size_t startState, const vector<Rule>& delta, const vector<Rule>& epsilons, const vector<bool>& finalStates, bool acceptsEpsilon) {
 	this->alphabet = alphabet;
 	this->states = states;
 	this->startState = startState;
@@ -44,6 +59,11 @@ void Automata::addRule(size_t init, char letter, size_t dest) {
 }
 
 Automata Automata::automataUnion(const Automata& left, const Automata& right) {
+	if (!areTheSame(left.alphabet, right.alphabet)) {
+		throw "the alphabets should be the same";
+	}
+	vector<char> alphabet = left.alphabet;
+
 	size_t states = left.states * right.states;
 
 	size_t startState = left.startState * right.states + right.startState;
@@ -52,13 +72,6 @@ Automata Automata::automataUnion(const Automata& left, const Automata& right) {
 	for (size_t i = 0; i < finalStates.size(); i++) {
 		if (left.finalStates[i / right.states] || right.finalStates[i % right.states]) {
 			finalStates[i] = true;
-		}
-	}
-
-	vector<char> alphabet = left.alphabet;
-	for (size_t i = 0; i < right.alphabet.size(); i++) {
-		if (!containsElement(alphabet, right.alphabet[i])) {
-			alphabet.push_back(right.alphabet[i]);
 		}
 	}
 
@@ -232,8 +245,8 @@ Automata Automata::iteration(const Automata& automata) {
 	return Automata(automata.alphabet, automata.states, automata.startState, automata.delta, epsilons, finalStates, true);
 }
 
-Automata::Automata(char letter) {
-	alphabet.push_back(letter);
+Automata::Automata(const vector<char>& alphabet, char letter) {
+	this->alphabet = alphabet;
 
 	acceptsEpsilon = false;
 
@@ -247,4 +260,16 @@ Automata::Automata(char letter) {
 	delta.push_back(Rule(0, letter, 1));
 	delta.push_back(Rule(1, letter, 2));
 	delta.push_back(Rule(2, letter, 2));
+
+	for (size_t i = 0; i < alphabet.size(); i++) {
+		if (alphabet[i] == letter) {
+			continue;
+		}
+		Rule tmpRule = Rule(0, alphabet[i], 2);
+		delta.push_back(tmpRule);
+		tmpRule = Rule(1, alphabet[i], 2);
+		delta.push_back(tmpRule);
+		tmpRule = Rule(2, alphabet[i], 2);
+		delta.push_back(tmpRule);
+	}
 }

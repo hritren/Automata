@@ -3,7 +3,7 @@
 
 class UnaryOperator : public RegExpr{
 public:
-	UnaryOperator(RegExpr* re, char op);
+	UnaryOperator(RegExpr* re, char op, const vector<char>& alphabet);
 	~UnaryOperator();
 	std::string toString();
 	Automata toAutomata();

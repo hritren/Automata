@@ -4,13 +4,17 @@ UnaryOperator::~UnaryOperator() {
 	delete re;
 }
 
-UnaryOperator::UnaryOperator(RegExpr* re, char op) {
+UnaryOperator::UnaryOperator(RegExpr* re, char op,const vector<char>& alphabet) {
 	if (op != '*') {
 		throw "invalid operation";
+	}
+	if (!areTheSame(this->alphabet, re->getAlphabet())) {
+		throw "the alphabets should be the same";
 	}
 	this->op = op;
 	type = UNARY_OPERATOR;
 	this->re = re;
+	this->alphabet = alphabet;
 }
 std::string UnaryOperator::toString() {
 	std::string result = "(" + re->toString();

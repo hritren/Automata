@@ -1,13 +1,15 @@
-#pragma once
+#ifndef AUTOMATA
+#define AUTOMATA
 
-#include <iostream>
 #include <vector>
+#include <algorithm>
 #include "RegExpr.h"
 
 using namespace std;
 
 template <typename T>
 bool containsElement(const vector<T>& v, T el);
+bool areTheSame(const vector<char>& alphabet1, const vector<char>& alphabet2);
 
 struct Rule {
 	Rule(size_t init, char letter, size_t dest) : init(init), letter(letter), dest(dest) {}
@@ -43,11 +45,12 @@ public:
 	vector<bool> finalStates;
 	vector<Rule> delta;
 	vector<Rule> epsilons;
-	Automata(vector<char> alphabet, size_t states, size_t startState, vector<Rule> delta, vector<Rule> epsilons, vector<bool> finalStates, bool acceptsEpsilon);
+	Automata(const vector<char>& alphabet, size_t states, size_t startState, const vector<Rule>& delta, const vector<Rule>& epsilons, const vector<bool>& finalStates, bool acceptsEpsilon);
 	Automata();
-	Automata(char letter);
+	Automata(const vector<char>& alphabet, char letter);
 
 	//for testing
 	void addRule(size_t init, char letter, size_t dest);
 
 };
+#endif

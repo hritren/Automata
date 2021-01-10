@@ -3,7 +3,7 @@
 
 class Letter : public RegExpr {
 public:
-	Letter(char letter);
+	Letter(char letter, const vector<char>& alphabet);
 	void print();
 	std::string toString();
 	Automata toAutomata();

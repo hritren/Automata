@@ -1,9 +1,13 @@
 #include "BinaryOperator.h"
 
-BinaryOperator::BinaryOperator(RegExpr* left, char op, RegExpr* right) {
+BinaryOperator::BinaryOperator(RegExpr* left, char op, RegExpr* right, const vector<char>& alphabet) {
 	if (op != '+' && op != '.' && op != '&') {
 		throw "invalid operation";
 	}
+	if (!areTheSame(left->getAlphabet(), right->getAlphabet()) || !areTheSame(alphabet, left->getAlphabet())) {
+		throw "the alphabets should be the same";
+	}
+	this->alphabet = alphabet;
 	this->op = op;
 	this->left = left;
 	this->right = right;
