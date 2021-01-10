@@ -6,10 +6,6 @@
 
 using namespace std;
 
-template <typename T>
-bool containsElement(const vector<T>& v, T el);
-bool areTheSame(vector<char> alphabet1, vector<char> alphabet2);
-bool operator==(const Rule& lhs, const Rule& rhs);
 
 class RegExpr;
 
@@ -22,6 +18,10 @@ struct Rule {
 		cout << init << " " << letter << " " << dest << endl;
 	}
 };
+template <typename T>
+bool containsElement(const vector<T>& v, T el);
+bool areTheSame(vector<char> alphabet1, vector<char> alphabet2);
+bool operator==(const Rule& lhs, const Rule& rhs);
 
 class Automata {
 private:
@@ -29,7 +29,8 @@ private:
 	int existsEpsilonRule(size_t init) const;
 	bool accepts(size_t tmpState, string word) const;
 	void addRule(size_t init, char letter, size_t dest);
-
+	friend Automata& operator<<(Automata& automata, const string& word);
+	void shift(string word);
 	bool acceptsEpsilon;
 	size_t startState;
 	size_t states;

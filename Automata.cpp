@@ -28,12 +28,6 @@ bool areTheSame(vector<char> alphabet1, vector<char> alphabet2) {
 	return true;
 }
 
-Automata::Automata() {
-	states = 0;
-	startState = UINT_MAX;
-	acceptsEpsilon = false;
-}
-
 Automata::Automata(const vector<char>& alphabet, size_t states, size_t startState, const vector<Rule>& delta, const vector<Rule>& epsilons, const vector<bool>& finalStates, bool acceptsEpsilon) {
 	this->alphabet = alphabet;
 	this->states = states;
@@ -298,4 +292,17 @@ Automata::Automata(const vector<char>& alphabet, char letter) {
 
 Automata Automata::fromRegExpr(RegExpr* re) {
 	return re->toAutomata();
+}
+
+Automata& operator<<(Automata& automata, const string& word) {
+	automata.shift(word);
+	return automata;
+}
+
+void Automata::shift(string word) {
+	size_t tmpState = startState;
+	for (size_t i = 0; i < word.size(); i++) {
+		tmpState = destinationDelta(tmpState, word[i]);
+	}
+	startState = tmpState;
 }
