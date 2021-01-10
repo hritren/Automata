@@ -1,5 +1,4 @@
-#ifndef REG_EXPR
-#define REG_EXPR
+#pragma once 
 
 #include<iostream>
 #include<vector>
@@ -18,9 +17,8 @@ public:
 	virtual ~RegExpr();
 	virtual Automata toAutomata() = 0;
 	size_t getType();
-	vector<char> getAlphabet();
+	std::vector<char> getAlphabet();
 protected:
 	size_t type;
-	vector<char> alphabet;
+	std::vector<char> alphabet;
 };
-#endif

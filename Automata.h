@@ -1,5 +1,4 @@
-#ifndef AUTOMATA
-#define AUTOMATA
+#pragma once
 
 #include <vector>
 #include <algorithm>
@@ -9,7 +8,9 @@ using namespace std;
 
 template <typename T>
 bool containsElement(const vector<T>& v, T el);
-bool areTheSame(const vector<char>& alphabet1, const vector<char>& alphabet2);
+bool areTheSame(vector<char> alphabet1, vector<char> alphabet2);
+
+class RegExpr;
 
 struct Rule {
 	Rule(size_t init, char letter, size_t dest) : init(init), letter(letter), dest(dest) {}
@@ -34,6 +35,7 @@ public:
 	Automata static concat(const Automata& left, const Automata& right);
 	Automata static complement(const Automata& automata);
 	Automata static iteration(const Automata& automata);
+	Automata static fromRegExpr(RegExpr* re);
 	bool acceptsWord(string word);
 	void print() const;
 
@@ -53,4 +55,3 @@ public:
 	void addRule(size_t init, char letter, size_t dest);
 
 };
-#endif

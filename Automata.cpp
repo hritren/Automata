@@ -14,7 +14,7 @@ bool operator==(const Rule& lhs, const Rule& rhs) {
 	return lhs.init == rhs.init && lhs.letter == rhs.letter && lhs.dest == rhs.dest;
 }
 
-bool areTheSame(const vector<char>& alphabet1, const vector<char>& alphabet2) {
+bool areTheSame(vector<char> alphabet1, vector<char> alphabet2) {
 	if (alphabet1.size() != alphabet2.size()) {
 		return false;
 	}
@@ -133,13 +133,20 @@ bool Automata::accepts(size_t tmpState, string word) const {
 }
 
 void Automata::print() const {
-	cout << "alphabet: ";
+	cout << "alphabet: {";
+	bool firstIteration = true;
 	for (size_t i = 0; i < alphabet.size(); i++) {
-		cout << alphabet[i] << " ";
+		if (firstIteration) {
+			cout << alphabet[i];
+			firstIteration = false;
+		} else {
+			cout << ", " << alphabet[i];
+		}
 	}
+	cout << "}";
 
 	cout << endl << "set of states: {";
-	bool firstIteration = true;
+	firstIteration = true;
 	for (size_t i = 0; i < states; i++) {
 		if (firstIteration) {
 			cout << "q" << i;
@@ -237,7 +244,7 @@ Automata Automata::iteration(const Automata& automata) {
 		if (finalStates[i]) {
 			Rule epsRule = Rule(i, '@', automata.startState);
 			if (!containsElement(epsilons, epsRule)) {
-			epsilons.push_back(epsRule);
+				epsilons.push_back(epsRule);
 			}
 		}
 	}
@@ -247,29 +254,48 @@ Automata Automata::iteration(const Automata& automata) {
 
 Automata::Automata(const vector<char>& alphabet, char letter) {
 	this->alphabet = alphabet;
-
-	acceptsEpsilon = false;
-
-	states = 3;
-
 	startState = 0;
 
-	finalStates.resize(states);
-	finalStates[1] = true;
-
-	delta.push_back(Rule(0, letter, 1));
-	delta.push_back(Rule(1, letter, 2));
-	delta.push_back(Rule(2, letter, 2));
-
-	for (size_t i = 0; i < alphabet.size(); i++) {
-		if (alphabet[i] == letter) {
-			continue;
+	if (letter == '@') {
+		acceptsEpsilon = true;
+		states = 2;
+		finalStates.resize(states);
+		finalStates[0] = true;
+		for (size_t i = 0; i < alphabet.size(); i++) {
+			addRule(0, alphabet[i], 1);
+			addRule(1, alphabet[i], 1);
 		}
-		Rule tmpRule = Rule(0, alphabet[i], 2);
-		delta.push_back(tmpRule);
-		tmpRule = Rule(1, alphabet[i], 2);
-		delta.push_back(tmpRule);
-		tmpRule = Rule(2, alphabet[i], 2);
-		delta.push_back(tmpRule);
+	} else {
+		if (letter == '?') {
+			acceptsEpsilon = false;
+			states = 3;
+			finalStates.resize(states);
+			finalStates[1] = true;
+			for (size_t i = 0; i < alphabet.size(); i++) {
+				addRule(0, alphabet[i], 1);
+				addRule(1, alphabet[i], 2);
+				addRule(2, alphabet[i], 2);
+			}
+		} else {
+			acceptsEpsilon = false;
+			states = 3;
+			finalStates.resize(states);
+			finalStates[1] = true;
+			addRule(0, letter, 1);
+			addRule(1, letter, 2);
+			addRule(2, letter, 2);
+			for (size_t i = 0; i < alphabet.size(); i++) {
+				if (alphabet[i] == letter) {
+					continue;
+				}
+				addRule(0, alphabet[i], 2);
+				addRule(1, alphabet[i], 2);
+				addRule(2, alphabet[i], 2);
+			}
+		}
 	}
+}
+
+Automata Automata::fromRegExpr(RegExpr* re) {
+	return re->toAutomata();
 }
